@@ -173,8 +173,9 @@ export default class FileSystemAccessFileSystem
                             writable
                               .write(buffer)
                               .then(() => {
-                                writable.close();
-                                this.unlink(oldPath, cb);
+                                writable.close().then(()=>{
+                                  this.unlink(oldPath, cb);
+                                })
                               })
                               .catch(handleError(cb, newPath))
                           )
@@ -213,9 +214,17 @@ export default class FileSystemAccessFileSystem
                   .write(data)
                   .then(() => {
                     writable
-                      .close()
+                      .close().then(
+                        ()=> { console.log('stream closed -1')
+                        cb(null, createFile ? this.newFile(fname, flag, data) : undefined);
+                      }
+                      )
                       .catch(handleError(cb, fname));
-                    cb(null, createFile ? this.newFile(fname, flag, data) : undefined);
+                    (()=>{
+                      console.log('stream closed -2', fname)
+                    })();
+                    //debugger;
+                    //cb(null, createFile ? this.newFile(fname, flag, data) : undefined);
                   })
                   .catch(handleError(cb, fname))
               )
@@ -258,21 +267,25 @@ export default class FileSystemAccessFileSystem
   }
 
   public openFile(path: string, flags: FileFlag, cb: BFSCallback<File>): void {
+    //debugger;
     this.getHandle(path, (error, handle) => {
       if (error) { return cb(error); }
       if (handle instanceof FileSystemFileHandle) {
+        console.log('start open file handle')
         handle
           .getFile()
-          .then((file: GlobalFile) =>
-            file
-              .arrayBuffer()
-              .then((buffer) =>
-                cb(
-                  null,
-                  this.newFile(path, flags, buffer, file.size, file.lastModified)
-                )
+          .then((file: GlobalFile) => {
+            console.log(file)
+            return file
+            .arrayBuffer()
+            .then((buffer) =>
+              cb(
+                null,
+                this.newFile(path, flags, buffer, file.size, file.lastModified)
               )
-              .catch(handleError(cb, path))
+            )
+            .catch(handleError(cb, path))
+          }
           )
           .catch(handleError(cb, path));
       }
@@ -378,3 +391,5 @@ export default class FileSystemAccessFileSystem
     getHandleParts(pathParts);
   }
 }
+
+// asdfasdf
