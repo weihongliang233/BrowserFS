@@ -1,15 +1,15 @@
 {
   "name": "browserfs",
-  "version": "2.0.0",
+  "version": "0.0.2",
   "description": "A filesystem in your browser!",
-  "main": "dist/browserfs.js",
+  "main": "./build/browserfs.js",
   "typings": "dist/browserfs",
   "keywords": [
     "filesystem",
     "node",
     "storage"
   ],
-  "homepage": "https://github.com/jvilk/BrowserFS",
+  "homepage": "https://github.com/weihongliang233/BrowserFS",
   "author": "John Vilk <jvilk@cs.umass.edu> (http://people.cs.umass.edu/~jvilk)",
   "license": "MIT",
   "repository": {

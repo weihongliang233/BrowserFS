@@ -63,5 +63,8 @@ module.exports = {
         loader: 'source-map-loader'
       }
     ]
-  }
+  },
+  optimization: {
+    minimize: false,
+},
 };
